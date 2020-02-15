@@ -1,0 +1,31 @@
+version: "3.3"
+services:
+  otp:
+    build: https://gitlab.com/opentransitmap/docker-opentripplanner.git
+    restart: always
+    environment:
+      JAVA_MX: 2G
+    volumes:
+      - type: bind
+        source: /srv/osm2gtfs/data
+        target: /data
+        read_only: true
+    command: 
+      - run.sh 
+      - --build
+      - /data 
+      - --inMemory
+  ssl:
+    build: https://github.com/AddisMap/ssl-proxy-docker.git#patches
+    ports:
+      - 80:80
+      - 443:443
+    restart: always
+    command:
+      - -to
+      - otp:8080
+      - -from
+      - 0.0.0.0:443
+      - -redirectHTTP
+      - -domain
+      - ###FILL-YOUR-DOMAIN-HERE###
