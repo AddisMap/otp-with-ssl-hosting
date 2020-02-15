@@ -7,7 +7,7 @@ services:
       JAVA_MX: 2G
     volumes:
       - type: bind
-        source: /srv/osm2gtfs/data
+        source: ./data
         target: /data
         read_only: true
     command: 
